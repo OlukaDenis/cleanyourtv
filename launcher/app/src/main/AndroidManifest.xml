@@ -68,6 +68,7 @@
         <!-- Coocaa OS sources for the Inputs menu (coocaa_sources); see CoocaaSources. -->
         <provider android:authorities="com.skyworth.tv.provider" />
         <provider android:authorities="com.skyworth.tv.sdk.provider" />
+        <provider android:authorities="io.github.sumyabazar1.weather.provider" />
     </queries>
 
     <application

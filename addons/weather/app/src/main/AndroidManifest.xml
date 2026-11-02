@@ -30,5 +30,10 @@
             </intent-filter>
             <meta-data android:name="com.gathin.tvhome.card" android:resource="@xml/module_card" />
         </activity>
+
+        <provider
+            android:name=".WeatherProvider"
+            android:authorities="io.github.sumyabazar1.weather.provider"
+            android:exported="true" />
     </application>
 </manifest>

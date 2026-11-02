@@ -61,5 +61,18 @@
             android:fontFamily="@string/font_regular"
             android:letterSpacing="0.14"
             android:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/dreamWeather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:textColor="#D9FFFFFF"
+            android:textSize="16sp"
+            android:fontFamily="@string/font_medium"
+            android:letterSpacing="0.05"
+            android:visibility="gone" />
     </LinearLayout>
 </FrameLayout>

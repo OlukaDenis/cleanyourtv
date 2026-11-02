@@ -44,6 +44,7 @@ final class ClockScene {
     private final Random random = new Random();
     private final View content;
     private final ClockRefresh clockRefresh;
+    private final WeatherWidget weatherWidget;
     private final ImageView ambient;
     private final GradientDrawable glow;
     private int colorIndex;
@@ -78,6 +79,10 @@ final class ClockScene {
     ClockScene(View root) {
         content = root.findViewById(R.id.dreamContent);
         clockRefresh = new ClockRefresh(content);
+        weatherWidget = new WeatherWidget(root.getContext(), root.findViewById(R.id.dreamWeather));
+        content.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+            if ((r - l) != (or - ol) || (b - t) != (ob - ot)) clampClockOnScreen();
+        });
         ambient = root.findViewById(R.id.dreamAmbient);
         glow = new GradientDrawable();
         glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
@@ -97,12 +102,14 @@ final class ClockScene {
         handler.removeCallbacks(tick);
         handler.postDelayed(tick, MOVE_MS);
         clockRefresh.start();
+        weatherWidget.start();
         if (wallpaperFile != null && !wallpaperShown) loadWallpaper();
     }
 
     void stop() {
         handler.removeCallbacksAndMessages(null);   // the tick and any glow steps still queued
         clockRefresh.stop();
+        weatherWidget.shutdown();
         content.animate().cancel();
         wallpaperGeneration++;   // a decode still running must not attach its picture to a stopped scene
     }
@@ -247,6 +254,17 @@ final class ClockScene {
             glow.setGradientCenter((x + content.getWidth() / 2f) / parent.getWidth(),
                     (y + content.getHeight() / 2f) / parent.getHeight());
         }
+    }
+
+    private void clampClockOnScreen() {
+        View parent = (View) content.getParent();
+        if (parent == null || parent.getWidth() <= 0 || parent.getHeight() <= 0) return;
+        int maxX = Math.max(0, parent.getWidth() - content.getWidth());
+        int maxY = Math.max(0, parent.getHeight() - content.getHeight());
+        float x = Math.max(maxX * 0.08f, Math.min(content.getX(), maxX * 0.92f));
+        float y = Math.max(maxY * 0.08f, Math.min(content.getY(), maxY * 0.92f));
+        content.setX(x);
+        content.setY(y);
     }
 
     private void shiftGlow() {
